@@ -1,0 +1,46 @@
+set levelUpAllMembers 0x009D5000
+
+ASM_START 0x001F1828
+    daddiu $s0, $zero, 0x2 // First character id (Yukari)
+    j 0x009D5000
+    daddu $s1, $zero, 0xB // Characters' id end
+ASM_END
+
+ASM_START levelUpAllMembers
+    b forLoopEnd
+    nop
+    forLoopStart: addiu $v0, $zero, 0x6
+    beq $v0, $s0, checkCurrentCharacter
+    addiu $a0, $zero, 0x14a // Flag of character 0x6
+
+    addiu $v0, $zero, 0x6
+    slt $v0, $s0, $v0
+    bne $v0, $zero, checkCurrentCharacter
+    addiu $a0, $s0, 0x140 // Flag of characters 0x2-0x5
+    addiu $a0, $s0, 0x13f // Flag of characters 0x7-0x10
+
+    checkCurrentCharacter: jal 0x0016f190 // Check current character bit
+    nop
+    beq $v0, $zero, forLoopNextIteration
+    nop
+    move $a0, $s0
+    jal 0x0016C470
+    nop 
+    andi $a0,$v0,0x00FF // Current character level
+    lw $a1,0x2A54($s2)
+    lw $a2,0xB8($s2)
+    lw $a3,0x2A58($s2)
+    lw $t0,0x11C($s2) // Number of members in battle
+    jal 0x001FBDF0 // Experience calculator
+    nop 
+    move $a0, $s0 // Current character
+    daddu $a1,$v0,$zero // Current experience to add
+    jal 0x001F9E90
+    nop 
+    forLoopNextIteration: addiu $s0,$s0,0x1
+    forLoopEnd: bne $s0, $s1, forLoopStart
+    nop
+
+    j 0x001f188c
+    nop
+ASM_END
