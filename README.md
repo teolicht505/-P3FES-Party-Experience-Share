@@ -1,4 +1,4 @@
-# Scrollable Msg P3FES
+# Party Experience Share
 ## Description
 This mod ensures that all your party members, whether they are actively fighting in the current battle or waiting at the entrance, receive the same amount of experience points. No more leaving your favorite characters under-leveled just because they weren't in the active party.
 
