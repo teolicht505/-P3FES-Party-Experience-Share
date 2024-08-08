@@ -2,7 +2,7 @@
 ## Description
 This cheat ensures that all your party members, whether they are actively fighting in the current battle or waiting at the entrance, receive the same amount of experience points. No more leaving your favorite characters under-leveled just because they weren't in the active party.
 
-![](Share Party Experience/preview.png)
+![](Share%20Party%20Experience/preview.png)
 
 ## Compilation
 This cheat is written in a custom language for PS2 cheats called CLPS2C, so the first step to compile this cheat is to use the [CLPS2C-Compiler](https://github.com/NiV-L-A/CLPS2C-Compiler/tree/master).
