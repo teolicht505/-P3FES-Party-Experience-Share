@@ -1,5 +1,5 @@
 set levelUpAllMembers 0x009D5000
-set setCharacterFlagsTheAnswer 0x009D5100
+set setCharacterFlags 0x009D5100
 
 ASM_START 0x001F1828
     daddiu $s0, $zero, 0x2 // First character id (Yukari)
@@ -8,7 +8,7 @@ ASM_START 0x001F1828
 ASM_END
 
 ASM_START levelUpAllMembers
-    j 0x009D5100 // Set character flags in the Answer
+    j 0x009D5100 // Set character flags in the Answer or first Tartarus visit
     nop
     doWhileStart: addiu $v0, $zero, 0x6
     beq $v0, $s0, doWhileNextIteration // Skip Fuuka's id since she already gets experience earlier in the code
@@ -48,9 +48,10 @@ ASM_END
 
 // In the answer, Fuuka sets the character flags when asked for the current everyone status
 // We will activate the same flags she does with flowscript only for the the Answer with assembly
-ASM_START setCharacterFlagsTheAnswer
+// We will do the same for the first Tartarus tutorial visit since game doesn't unlock Yukari and Junpei until next day
+ASM_START setCharacterFlags
     lw $a0,-0x4D4C($gp) // Load flag that tells if we are in The Answer
-    beq $a0,$zero,endFlagSetting // If we are not in the answer skip the flag setting
+    beq $a0,$zero,checkDayMonth // If we are not in the answer skip the flag setting and check day month
     nop 
     jal 0x00395170
     addiu $a0,$zero,0x142
@@ -77,5 +78,20 @@ ASM_START setCharacterFlagsTheAnswer
     jal 0x00395170
     addiu $a0,$zero,0x144
     endFlagSetting: j 0x009D5008
+    nop
+    checkDayMonth: jal 0x0017da40 // Check current day
+    nop
+    bne $v0, 0x14, endDayMonth
+    nop
+    jal 0x0017d920 // Check current month
+    nop
+    bne $v0, 0x4, endDayMonth
+    nop
+    // If it's 20th of April (first Tartarus tutorial visit), we unlock Yukari and Junpei
+    jal 0x00395170
+    addiu $a0,$zero,0x142
+    jal 0x00395170
+    addiu $a0,$zero,0x145
+    endDayMonth: j 0x009D5008
     nop
 ASM_END
